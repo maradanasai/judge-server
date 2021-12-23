@@ -160,7 +160,7 @@ def main():
         judge = get_judge()
         judge.listen()
         server.add_api('api.yaml')
-        server.run(port=8001)
+        server.run(port=8001, debug=False)
 
 
 if __name__ == '__main__':
