@@ -1,3 +1,6 @@
+ansi2html
+six
+connexion
 cython
 pylru
 pygments
