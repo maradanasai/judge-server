@@ -4,13 +4,11 @@ info:
   description: "A modern contest platform for the modern web.\n"
   version: "1.0.0"
   title: "DMOJ REST API"
-  contact:
-    email: "simon.v.pettersson@gmail.com"
   license:
     name: "GNU Affero General Public License v3.0"
     url: "https://raw.githubusercontent.com/DMOJ/judge/master/LICENSE"
-host: "localhost:8080"
-basePath: "/simonvpe/dmoj/1.0.0"
+host: "localhost:8001"
+basePath: "/"
 tags:
 - name: "submission"
   description: "Problem Submission"
@@ -20,10 +18,10 @@ schemes:
 - "https"
 - "http"
 paths:
-  /submission:
+  /submit:
     post:
       tags:
-      - "submission"
+      - "submit"
       summary: "Submit a solution to the judge"
       operationId: "add_submission"
       consumes:

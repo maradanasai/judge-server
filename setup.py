@@ -166,12 +166,14 @@ setup(
     package_data={
         'dmoj.cptbox': ['syscalls/aliases.list', 'syscalls/*.tbl'],
         'dmoj.executors': ['java_sandbox.jar', '*.policy'],
+        '': ['api/api.yaml']
     },
     entry_points={
         'console_scripts': [
             'dmoj = dmoj.judge:main',
             'dmoj-cli = dmoj.cli:main',
             'dmoj-autoconf = dmoj.executors.autoconfig:main',
+            'dmoj-rest = dmoj.rest:main'
         ]
     },
     ext_modules=cythonize(extensions),

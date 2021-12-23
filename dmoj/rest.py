@@ -1,15 +1,14 @@
+import logging
 from base64 import b64decode
 from enum import Enum
 from operator import itemgetter
 from typing import cast
 
 import connexion
-import logging
-from flask import g
-from flask import jsonify
+from flask import g, jsonify
 
 from dmoj import judgeenv, executors
-from dmoj.judge import Judge
+from dmoj.judge import Judge, Submission
 from dmoj.packet import PacketManager
 from dmoj.utils.ansi import ansi_style
 
@@ -30,13 +29,16 @@ class LocalPacketManager(object):
         pass
 
     def test_case_status_packet(self, position, result):
-        self.judge.graded_submissions[-1]['testCaseStatus'] = result.readable_codes()
+        self.judge.graded_submissions[-1]['testCaseResults'].append({
+                'case': position,
+                'verdict': result.readable_codes()[0]
+            })
 
     def compile_error_packet(self, message):
         self.judge.graded_submissions[-1]['compileError'].append(message)
 
     def compile_message_packet(self, message):
-        self.judge.graded_submissions[-1]['compileMessage'].append(message)
+        pass
 
     def internal_error_packet(self, message):
         self.judge.graded_submissions[-1]['internalError'].append(message)
@@ -94,13 +96,13 @@ def add_submission(body):
     memory_limit = body['memoryLimit']
     source = body['sourceCode']
 
-    if problem_id not in map(itemgetter(0), judgeenv.get_supported_problems()):
+    if problem_id not in map(itemgetter(0), judgeenv.get_supported_problems_and_mtimes()):
         return jsonify({
             'error': "unknown problem %s" % problem_id
         }), 405
 
     if language_id not in executors.executors:
-        return jsonify({'error': "unknown languae %s" % language_id}), 405
+        return jsonify({'error': "unknown language %s" % language_id}), 405
 
     if time_limit <= 0:
         return jsonify({'error': "timeLimit must be >= 0"}), 405
@@ -114,19 +116,21 @@ def add_submission(body):
         "submissionId": submission_id,
         "problemId": problem_id,
         "languageId": language_id,
-        "sourceCode": source,
-        "timeLimit": time_limit,
-        "memoryLimit": memory_limit,
         "compileError": [],
-        "compileMessage": [],
         "testCaseResults": [],
         "internalError": []
     })
 
     source = b64decode(source).decode('utf-8')
     print(source)
-    judge.begin_grading(submission_id, problem_id, language_id, source, time_limit,
-                        memory_limit, False, False, blocking=True)
+
+    judge.begin_grading(
+        Submission(
+            judge.next_submission_id, problem_id, language_id, source, time_limit, memory_limit, False, {}
+        ),
+        blocking=True,
+        report=print
+    )
 
     judge.next_submission_id += 1
 
@@ -156,7 +160,7 @@ def main():
         judge = get_judge()
         judge.listen()
         server.add_api('api.yaml')
-        server.run(port=8080)
+        server.run(port=8001)
 
 
 if __name__ == '__main__':
