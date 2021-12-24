@@ -137,10 +137,9 @@ def add_submission(body):
     return jsonify(judge.graded_submissions[submission_id]), 200
 
 
-# GET /submissionResult/{submissionId}
-def submission_result_get(submission_id):
-    judge = get_judge()
-    return jsonify(judge.graded_submissions[submission_id]), 200
+# GET /runtimes
+def get_all_runtimes():
+    return jsonify(list(executors.executors.keys())), 200
 
 
 def main():

@@ -43,26 +43,17 @@ paths:
         405:
           description: "Invalid input"
       x-swagger-router-controller: "dmoj.rest"
-  /submissionResult/{submissionId}:
+  /runtimes:
     get:
       tags:
       - "result"
-      summary: "Retrieve the result of a submission"
-      operationId: "submission_result_get"
+      summary: "Retrieve all available language runtimes"
+      operationId: "get_all_runtimes"
       produces:
       - "application/json"
-      parameters:
-      - name: "submissionId"
-        in: "path"
-        description: "id of submission to return"
-        required: true
-        type: "integer"
-        format: "int64"
       responses:
         200:
           description: "successful operation"
-          schema:
-            $ref: "#/definitions/SubmissionResult"
       x-swagger-router-controller: "dmoj.rest"
 definitions:
   Submission:
@@ -91,23 +82,12 @@ definitions:
         description: "memory limit for grading, in kilobytes"
         default: 65536
     example:
-      timeLimit: 0.8008281904610115
-      sourceCode: "sourceCode"
-      languageId: "languageId"
-      memoryLimit: 6
-      problemId: "problemId"
+      timeLimit: 1
+      sourceCode: "place the source code in Base64 encoded"
+      languageId: "JAVA8"
+      memoryLimit: 1024
+      problemId: "aplusb"
   SubmissionResponse:
-    type: "object"
-    required:
-    - "submissionId"
-    properties:
-      submissionId:
-        type: "integer"
-        format: "int64"
-        description: "id of the submission"
-    example:
-      submissionId: 0
-  SubmissionResult:
     type: "object"
     required:
     - "submissionId"
