@@ -4,7 +4,7 @@ connexion
 cython
 pylru
 pygments
-pyyaml
+pyyaml<6
 setproctitle
 termcolor
 watchdog
