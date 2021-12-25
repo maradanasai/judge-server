@@ -113,7 +113,6 @@ def add_submission(body):
     submission_id = judge.next_submission_id
 
     judge.graded_submissions.append({
-        "submissionId": submission_id,
         "problemId": problem_id,
         "languageId": language_id,
         "compileError": [],

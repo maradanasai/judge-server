@@ -9,11 +9,6 @@ info:
     url: "https://raw.githubusercontent.com/DMOJ/judge/master/LICENSE"
 host: "localhost:8001"
 basePath: "/"
-tags:
-- name: "submission"
-  description: "Problem Submission"
-- name: "result"
-  description: "Submission Result"
 schemes:
 - "https"
 - "http"
@@ -38,15 +33,13 @@ paths:
       responses:
         200:
           description: "successful operation"
-          schema:
-            $ref: "#/definitions/SubmissionResponse"
         405:
           description: "Invalid input"
       x-swagger-router-controller: "dmoj.rest"
   /runtimes:
     get:
       tags:
-      - "result"
+      - "runtimes"
       summary: "Retrieve all available language runtimes"
       operationId: "get_all_runtimes"
       produces:
@@ -83,21 +76,10 @@ definitions:
         default: 65536
     example:
       timeLimit: 1
-      sourceCode: "place the source code in Base64 encoded"
+      sourceCode: "aW1wb3J0IGphdmEuaW8uKjsKCnB1YmxpYyBjbGFzcyBUZXN0IHsKICAgIHB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHRocm93cyBFeGNlcHRpb24gewogICAgICAgIEJ1ZmZlcmVkUmVhZGVyIGJyID0gbmV3IEJ1ZmZlcmVkUmVhZGVyKG5ldyBJbnB1dFN0cmVhbVJlYWRlcihTeXN0ZW0uaW4pKTsKICAgICAgICBpbnQgbiA9IEludGVnZXIucGFyc2VJbnQoYnIucmVhZExpbmUoKSk7CiAgICAgICAgCiAgICAgICAgd2hpbGUgKG4tLSAhPSAwKSB7CiAgICAgICAgICAgIFN0cmluZ1tdIGFiID0gYnIucmVhZExpbmUoKS5zcGxpdCgiICIpOwogICAgICAgICAgICBTeXN0ZW0ub3V0LnByaW50bG4oSW50ZWdlci5wYXJzZUludChhYlswXSkgKyBJbnRlZ2VyLnBhcnNlSW50KGFiWzFdKSk7CiAgICAgICAgfQogICAgfQp9Cg=="
       languageId: "JAVA8"
       memoryLimit: 1024
       problemId: "aplusb"
-  SubmissionResponse:
-    type: "object"
-    required:
-    - "submissionId"
-    properties:
-      submissionId:
-        type: "integer"
-        format: "int64"
-        description: "id of the submission"
-    example:
-      submissionId: 0
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"

@@ -1,6 +1,7 @@
 ansi2html
 six
 connexion
+connexion[swagger-ui]
 cython
 pylru
 pygments
