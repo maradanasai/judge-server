@@ -6,6 +6,7 @@ from typing import cast
 
 import connexion
 from flask import g, jsonify
+from flask_cors import CORS
 
 from dmoj import judgeenv, executors
 from dmoj.judge import Judge, Submission
@@ -154,6 +155,7 @@ def main():
     print()
 
     server = connexion.FlaskApp(__name__, specification_dir='api/')
+    CORS(server.app)
     with server.app.app_context():
         judge = get_judge()
         judge.listen()
