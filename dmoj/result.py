@@ -47,6 +47,8 @@ class Result:
         self.feedback = feedback
         self.extended_feedback = extended_feedback
         self.points = points
+        self.input_case = ''
+        self.output_case = ''
 
     def get_main_code(self):
         for flag in Result.CODE_DISPLAY_ORDER:
@@ -68,7 +70,8 @@ class Result:
 
     @property
     def output(self):
-        return utf8text(self.proc_output[: self.case.output_prefix_length], 'replace')
+        #return utf8text(self.proc_output[: self.case.output_prefix_length], 'replace')
+        return utf8text(self.proc_output)
 
     @classmethod
     def get_feedback_str(cls, error, process, binary):

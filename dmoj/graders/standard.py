@@ -34,6 +34,8 @@ class StandardGrader(BaseGrader):
         result.points = check.points
         result.feedback = check.feedback or result.feedback
         result.extended_feedback = check.extended_feedback or result.extended_feedback
+        result.input_case = case.input_data()
+        result.output_case = case.output_data()
 
         case.free_data()
 

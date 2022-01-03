@@ -12,7 +12,7 @@ from dmoj import judgeenv, executors
 from dmoj.judge import Judge, Submission
 from dmoj.packet import PacketManager
 from dmoj.utils.ansi import ansi_style
-
+from dmoj.utils.unicode import utf8text
 
 class JudgeState(Enum):
     FAILED = 0
@@ -32,7 +32,10 @@ class LocalPacketManager(object):
     def test_case_status_packet(self, position, result):
         self.judge.graded_submissions[-1]['testCaseResults'].append({
                 'case': position,
-                'verdict': result.readable_codes()[0]
+                'verdict': result.readable_codes()[0],
+                'input': utf8text(result.input_case),
+                'output': utf8text(result.output_case),
+                'yourOutput': result.output
             })
 
     def compile_error_packet(self, message):
