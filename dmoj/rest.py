@@ -5,11 +5,14 @@ from operator import itemgetter
 from typing import cast
 
 import connexion
+import signal
+import traceback
 from flask import g, jsonify
 from flask_cors import CORS
 
 from dmoj import judgeenv, executors
 from dmoj.judge import Judge, Submission
+from dmoj.monitor import Monitor
 from dmoj.packet import PacketManager
 from dmoj.utils.ansi import ansi_style
 from dmoj.utils.unicode import utf8text
@@ -161,7 +164,22 @@ def main():
     CORS(server.app)
     with server.app.app_context():
         judge = get_judge()
-        judge.listen()
+        monitor = Monitor()
+        monitor.callback = judge.update_problems
+
+        if hasattr(signal, 'SIGUSR2'):
+            def update_problem_signal(signum, frame):
+                judge.update_problems()
+            signal.signal(signal.SIGUSR2, update_problem_signal)
+        with monitor:
+            try:
+                judge.listen()
+            except KeyboardInterrupt:
+                pass
+            except Exception:
+                traceback.print_exc()
+            finally:
+                judge.murder()
         server.add_api('api.yaml')
         server.run(port=8001, debug=False)
 
