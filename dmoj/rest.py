@@ -92,6 +92,8 @@ def get_judge():
         g._judge = LocalJudge()
     return g._judge
 
+def get_all_problems():
+    return jsonify(list(judgeenv.get_supported_problems())), 200
 
 # POST /submission
 def add_submission(body):

@@ -48,6 +48,18 @@ paths:
         200:
           description: "successful operation"
       x-swagger-router-controller: "dmoj.rest"
+  /problems:
+    get:
+      tags:
+        - "problems"
+      summary: "Retrieve all available problems at Judge"
+      operationId: "get_all_problems"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+      x-swagger-router-controller: "dmoj.rest"
 definitions:
   Submission:
     type: "object"
