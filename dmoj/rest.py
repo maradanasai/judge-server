@@ -183,7 +183,7 @@ def main():
             finally:
                 judge.murder()
         server.add_api('api.yaml')
-        server.run(port=8001, debug=False)
+        server.run(port=80, debug=False, ssl_context=('../cert.pem', '../key.pem'))
 
 
 if __name__ == '__main__':
