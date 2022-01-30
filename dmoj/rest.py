@@ -5,9 +5,10 @@ from operator import itemgetter
 from typing import cast
 
 import connexion
+import waitress
 import signal
 import traceback
-from flask import g, jsonify
+from flask import g, jsonify, Flask, request
 from flask_cors import CORS
 
 from dmoj import judgeenv, executors
@@ -16,6 +17,8 @@ from dmoj.monitor import Monitor
 from dmoj.packet import PacketManager
 from dmoj.utils.ansi import ansi_style
 from dmoj.utils.unicode import utf8text
+
+app = Flask(__name__)
 
 class JudgeState(Enum):
     FAILED = 0
@@ -96,9 +99,10 @@ def get_all_problems():
     return jsonify(list(judgeenv.get_supported_problems())), 200
 
 # POST /submission
-def add_submission(body):
+@app.route("/submit", methods = ['POST'])
+def add_submission():
     judge = get_judge()
-    body = connexion.request.get_json()
+    body = request.get_json(force=True)
     problem_id = body['problemId']
     language_id = body['languageId']
     time_limit = body['timeLimit']
@@ -130,7 +134,6 @@ def add_submission(body):
     })
 
     source = b64decode(source).decode('utf-8')
-    print(source)
 
     judge.begin_grading(
         Submission(
@@ -146,12 +149,13 @@ def add_submission(body):
 
 
 # GET /runtimes
+@app.route("/runtimes")
 def get_all_runtimes():
     return jsonify(list(executors.executors.keys())), 200
 
 
 def main():
-    judgeenv.load_env(cli=True)
+    judgeenv.load_env(cli=False)
     executors.load_executors()
 
     logging.basicConfig(filename=judgeenv.log_file, level=logging.INFO,
@@ -162,9 +166,8 @@ def main():
     del judgeenv.startup_warnings
     print()
 
-    server = connexion.FlaskApp(__name__, specification_dir='api/')
-    CORS(server.app)
-    with server.app.app_context():
+    CORS(app)
+    with app.app_context():
         judge = get_judge()
         monitor = Monitor()
         monitor.callback = judge.update_problems
@@ -182,8 +185,9 @@ def main():
                 traceback.print_exc()
             finally:
                 judge.murder()
-        server.add_api('api.yaml')
-        server.run(port=80, debug=False)
+        #app.run(port=8080, debug=False)
+        from waitress import serve
+        serve(app, port=8080)
 
 
 if __name__ == '__main__':

@@ -72,10 +72,11 @@ def load_env(cli=False, testsuite=False):  # pragma: no cover
 
     parser = argparse.ArgumentParser(description=description)
     if not cli:
-        parser.add_argument('server_host', help='host to connect for the server')
-        parser.add_argument('judge_name', nargs='?', help='judge name (overrides configuration)')
-        parser.add_argument('judge_key', nargs='?', help='judge key (overrides configuration)')
+        parser.add_argument('server_host', default='localhost', nargs='?', help='host to connect for the server')
+        parser.add_argument('judge_name', default='Tier1', nargs='?', help='judge name (overrides configuration)')
+        parser.add_argument('judge_key', default='12345', nargs='?', help='judge key (overrides configuration)')
         parser.add_argument('-p', '--server-port', type=int, default=9999, help='port to connect for the server')
+        parser.add_argument("-c", '--config', default='/home/rajeev/PycharmProjects/online-judge/judge_conf.yml', help='configure config file location in judgeenv.py')
     elif not testsuite:
         parser.add_argument('command', nargs='*', help='invoke CLI command without spawning shell')
         parser.add_argument(
@@ -85,13 +86,13 @@ def load_env(cli=False, testsuite=False):  # pragma: no cover
             help='file to load and save command history (default: ~/.dmoj_history)',
         )
 
-    parser.add_argument(
-        '-c',
-        '--config',
-        type=str,
-        default='~/.dmojrc',
-        help='file to load judge configurations from (default: ~/.dmojrc)',
-    )
+    # parser.add_argument(
+    #     '-c',
+    #     '--config',
+    #     type=str,
+    #     default='~/.dmojrc',
+    #     help='file to load judge configurations from (default: ~/.dmojrc)',
+    # )
 
     if not cli:
         parser.add_argument('-l', '--log-file', help='log file to use')
